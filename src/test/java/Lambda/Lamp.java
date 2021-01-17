@@ -1,3 +1,7 @@
+package Lambda;
+
+import Lambda.ElectricityConsumer;
+
 public class Lamp implements ElectricityConsumer {
 
     public void lampOn(){
@@ -5,7 +9,7 @@ public class Lamp implements ElectricityConsumer {
     }
 
     @Override
-    public void electricityOn() {
+    public void electricityOn(Object sender) {
         lampOn();
     }
 }

@@ -1,4 +1,11 @@
+package Lambda;
+
 public class Program {
+
+    public static void fire(Object sender){
+        System.out.println("Fire!!!");
+    }
+
     public static void main(String[] args) {
         Switcher sw = new Switcher();
         Lamp lamp = new Lamp();
@@ -8,7 +15,7 @@ public class Program {
         sw.addElectricityListener(radio);
 
 
-        sw.addElectricityListener(() -> System.out.println("Пожар"));
+        sw.addElectricityListener(Program::fire);
 
         sw.switchOn();
 

@@ -1,3 +1,7 @@
+package Lambda;
+
+import Lambda.ElectricityConsumer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +25,7 @@ public class Switcher {
         System.out.println("Выключатель включен");
 
         for (ElectricityConsumer c : listeners) {
-            c.electricityOn();
+            c.electricityOn(this);
         }
     }
 
