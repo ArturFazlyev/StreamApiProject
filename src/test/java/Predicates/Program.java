@@ -16,13 +16,16 @@ public class Program {
         // Перебор коллекции
         persons.stream().filter(person -> person.getAge() >= 18).forEach(System.out::println);
 
+        // Отсортировать коллекцию
         persons.stream().filter(person -> person.getAge() >= 18).sorted(Comparator.comparing(Person::getName))
                 .forEach(System.out::println);
 
+        // Отфильтровать отсортированную коллекцию
         persons.stream().filter(person -> person.getAge() >= 18).map(Person::getName)
                 .forEach(System.out::println);
 
 
+        // Вывести среднее арифметическое
         System.out.println(persons.stream().filter(person -> person.getAge() >= 18).mapToInt(p -> p.getAge()).average().getAsDouble());
 
 
