@@ -11,10 +11,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Streams {
@@ -86,6 +88,47 @@ public class Streams {
 
         System.out.println(deps.stream().reduce(this::reducer));
 
+        emps.stream().anyMatch(employee -> employee.getPosition() == Position.CHEF);
+
+    }
+
+    @Test
+    public void testTransform(){
+        IntStream.of(100, 200, 300).mapToLong(Long::valueOf);
+        emps.stream().filter(employee -> employee.getAge() >= 18);
+        emps.stream().takeWhile(employee -> employee.getAge() > 30).forEach(System.out::println);
+    }
+
+    @Test
+    public void testReal(){
+        Stream<Employee> sorted = emps.stream().filter(employee -> employee.getAge() >= 30 && employee.getPosition() != Position.WORKER)
+                .sorted(Comparator.comparing(Employee::getLastName));
+        print(sorted);
+
+        Stream<Employee> employeeStream = emps.stream().filter(employee -> employee.getAge() >= 40)
+                .limit(4)
+                .sorted(Comparator.comparing(Employee::getAge));
+
+        print(employeeStream);
+
+        System.out.println(emps.stream().mapToInt(Employee::getAge).summaryStatistics());
+
+
+    }
+
+    private void print(Stream<Employee> stream) {
+        stream
+                .map(emp -> String.format(
+                        "%4d | %-15s %-10s age %s %s",
+                        emp.getId(),
+                        emp.getLastName(),
+                        emp.getFirstName(),
+                        emp.getAge(),
+                        emp.getPosition()
+                ))
+                .forEach(System.out::println);
+
+        System.out.println();
     }
 
     public Department reducer (Department parent, Department child){
