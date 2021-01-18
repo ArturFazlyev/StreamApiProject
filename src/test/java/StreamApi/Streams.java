@@ -2,6 +2,7 @@ package StreamApi;
 
 import letscode.javalearn.collections.Department;
 import letscode.javalearn.collections.Employee;
+import letscode.javalearn.collections.Event;
 import letscode.javalearn.collections.Position;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +10,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Streams {
@@ -43,7 +48,7 @@ public class Streams {
     );
 
     @Test
-    public void creation() throws IOException {
+    public void testCreation() throws IOException {
         Stream<String> lines = Files.lines(Paths.get("D:\\1.txt"));
         Stream<Path> list = Files.list(Paths.get("./"));
         Stream<Path> walk = Files.walk(Paths.get("./"), 3);
@@ -53,8 +58,45 @@ public class Streams {
                 .add("Joe")
                 .build();
 
+        // Создание stream
         Stream<Employee> stream = emps.stream();
+        Stream<Employee> employeeStream = emps.parallelStream();
+
+        Stream.generate(() -> new Event(UUID.randomUUID(),
+                LocalDateTime.now(),
+                "Description"));
+
+        // Создание stream c шагом
+        Stream<Integer> iterate = Stream.iterate(1950, val -> val + 3);
+
+        Stream<Object> concat = Stream.concat(build, stream);
 
 
     }
+
+    @Test
+    public void testTerminate(){
+        emps.stream().count();
+        emps.stream().forEach(employee -> System.out.println(employee.getAge()));
+        emps.stream().forEachOrdered(employee -> System.out.println(employee.getAge()));
+
+        Map<Integer, String> collect = emps.stream().collect(Collectors.toMap(Employee::getId,
+                emps -> String.format("%s, %s",
+                        emps.getFirstName(), emps.getLastName())));
+
+        System.out.println(deps.stream().reduce(this::reducer));
+
+    }
+
+    public Department reducer (Department parent, Department child){
+        if (child.getParent() == parent.getId()){
+            parent.getChild().add(child);
+        } else {
+            parent.getChild().forEach(subParent -> reducer(subParent, child));
+        }
+
+        return parent;
+    }
+
+
 }
